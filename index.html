@@ -11,7 +11,7 @@
 
         :root {
             --nike-black: #111111;
-            --neon-volt: #ccff00; /* Nike Volt color */
+            --neon-volt: #ccff00; 
             --danger-red: #ff3e3e;
         }
 
@@ -34,12 +34,13 @@
         .search-container {
             border: 4px solid white;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background-color: white;
         }
 
         .search-container:focus-within {
             border-color: var(--neon-volt);
-            transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(204, 255, 0, 0.3);
+            transform: scale(1.01);
+            box-shadow: 0 0 30px rgba(204, 255, 0, 0.2);
         }
 
         .card-glass {
@@ -48,210 +49,282 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .reward-badge {
-            animation: pulse 2s infinite;
+        .mode-btn.active {
+            background-color: var(--neon-volt);
+            color: black;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        .level-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            width: 100%;
+            position: relative;
+            overflow: hidden;
         }
 
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 5px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
+        .level-progress {
+            height: 100%;
             background: var(--neon-volt);
-            border-radius: 10px;
+            width: 65%; /* Hardcoded progress */
+            transition: width 0.5s ease;
         }
 
-        /* Hide device under desk mode */
         .stealth-mode {
-            filter: brightness(0.2) contrast(1.2);
+            filter: brightness(0.15) contrast(1.1);
+        }
+
+        .squad-online {
+            width: 8px;
+            height: 8px;
+            background: var(--neon-volt);
+            border-radius: 50%;
+            display: inline-block;
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center p-4 md:p-8">
 
     <!-- Header / Status Bar -->
-    <nav class="w-full max-w-6xl flex justify-between items-center mb-12">
+    <nav class="w-full max-w-6xl flex flex-wrap justify-between items-center mb-8 gap-4">
         <div class="flex items-center gap-3">
             <div class="volt-bg text-black p-2 font-black italic tracking-tighter">THE FLEX</div>
-            <span class="text-xs text-gray-500 uppercase tracking-widest hidden md:block">Don't Study. Dominate.</span>
+            <div class="hidden lg:block ml-4">
+                <p class="text-[10px] text-gray-500 uppercase font-black">Rank: Street Legend</p>
+                <div class="level-bar mt-1 w-32">
+                    <div class="level-progress"></div>
+                </div>
+            </div>
         </div>
         
-        <div class="flex items-center gap-6">
+        <div class="flex items-center gap-4 md:gap-8">
             <div class="flex flex-col items-end">
-                <span class="text-[10px] text-gray-400 uppercase">Flex Points</span>
-                <span class="volt-text font-black text-xl">1,240 <i class="fas fa-bolt ml-1"></i></span>
+                <span class="text-[10px] text-gray-400 uppercase">LVL 15</span>
+                <span class="volt-text font-black text-xl" id="pointsDisplay">1,240 <i class="fas fa-bolt ml-1"></i></span>
             </div>
-            <div class="w-12 h-12 rounded-full border-2 border-white overflow-hidden">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jun" alt="User Profile">
+            <div class="flex items-center gap-2 cursor-pointer group">
+                <div class="w-12 h-12 rounded-full border-2 border-white overflow-hidden group-hover:border-neon-volt">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jun" alt="User Profile">
+                </div>
             </div>
         </div>
     </nav>
 
-    <!-- Main Search Area -->
-    <main class="w-full max-w-3xl flex flex-col items-center mt-10">
-        <h1 class="heading-font text-5xl md:text-7xl mb-2 text-center">
-            Ask <span class="italic">Anything.</span>
-        </h1>
-        <p class="text-gray-400 mb-8 text-center max-w-md">Type in Chinese, Manglish, or whatever. We'll make it sound like a pro scientist said it.</p>
-
-        <div class="w-full relative group">
-            <div class="search-container flex items-center bg-transparent px-6 py-5 rounded-none relative z-10">
-                <input 
-                    id="searchInput"
-                    type="text" 
-                    placeholder="e.g. Kenapa fire hot gila? or 为什么植物需要阳光?" 
-                    class="bg-transparent w-full text-xl md:text-2xl outline-none font-bold placeholder-gray-700"
-                >
-                <button onclick="simulateSearch()" class="volt-bg text-black px-6 py-2 font-black hover:bg-white transition-colors">
-                    GO
-                </button>
-            </div>
-            <!-- Decorative shadow -->
-            <div class="absolute inset-0 translate-x-2 translate-y-2 bg-white -z-10 group-hover:translate-x-3 group-hover:translate-y-3 transition-transform"></div>
-        </div>
-
-        <!-- Quick Access / Rebel Features -->
-        <div class="flex flex-wrap justify-center gap-4 mt-12">
-            <button onclick="toggleStealth()" class="card-glass px-4 py-2 text-xs font-bold uppercase tracking-tighter flex items-center gap-2 hover:bg-white hover:text-black transition-all">
-                <i class="fas fa-eye-slash"></i> Stealth Mode (Under Desk)
-            </button>
-            <button class="card-glass px-4 py-2 text-xs font-bold uppercase tracking-tighter flex items-center gap-2 hover:bg-white hover:text-black transition-all">
-                <i class="fas fa-fire"></i> Hotpot Break Timer
-            </button>
-            <button class="card-glass px-4 py-2 text-xs font-bold uppercase tracking-tighter flex items-center gap-2 hover:bg-white hover:text-black transition-all">
-                <i class="fas fa-trophy"></i> Reward Shop
-            </button>
-        </div>
-    </main>
-
-    <!-- Results Area (Hidden by default) -->
-    <section id="resultsSection" class="w-full max-w-6xl mt-20 hidden">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            
-            <!-- Bridge the Gap Column -->
-            <div class="col-span-1 space-y-6">
-                <h3 class="heading-font text-xl border-l-4 border-volt pl-3">The Professional Glow-Up</h3>
-                <div class="card-glass p-6 border-l-4 border-yellow-400">
-                    <p class="text-xs text-gray-400 uppercase mb-2">You said:</p>
-                    <p id="userOriginalQuery" class="italic mb-4">"Kenapa fire hot gila?"</p>
-                    <i class="fas fa-arrow-down volt-text mb-4"></i>
-                    <p class="text-xs text-gray-400 uppercase mb-2">Scientific Terminology:</p>
-                    <p class="font-bold text-lg text-white">Exothermic Chemical Reaction & Thermal Radiation</p>
-                </div>
-
-                <div class="reward-badge bg-gradient-to-r from-purple-600 to-blue-600 p-4 rounded-lg flex items-center justify-between">
-                    <div>
-                        <p class="text-[10px] uppercase font-bold">New Mission</p>
-                        <p class="text-sm font-black">Explain this to teacher to get 50 XP</p>
-                    </div>
-                    <i class="fas fa-medal text-2xl"></i>
-                </div>
-            </div>
-
-            <!-- Big Content Column -->
-            <div class="col-span-1 md:col-span-2 space-y-6">
-                <div class="flex justify-between items-end">
-                    <h3 class="heading-font text-3xl">The Breakdown</h3>
-                    <span class="text-xs text-gray-500">Source: Global Science Network</span>
-                </div>
-                
-                <div class="card-glass p-8 space-y-6 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 p-4 opacity-10">
-                        <i class="fas fa-bolt text-9xl"></i>
-                    </div>
-                    
-                    <div class="prose prose-invert max-w-none">
-                        <p class="text-xl leading-relaxed">
-                            Basically, <span class="volt-text font-bold">fire</span> isn't just "hot." It's a rapid sequence of events where energy is released. When you burn something, you are breaking chemical bonds and releasing that energy as <span class="underline decoration-volt">Heat and Light</span>.
-                        </p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
-                            <div class="bg-white/10 p-4 border border-white/20">
-                                <h4 class="font-black mb-2 uppercase text-xs">Physical Hands-on Task</h4>
-                                <p class="text-sm text-gray-300">Rub your hands together for 30 seconds. Feel that? That's friction turning into thermal energy. Fire is just that, but on steroids.</p>
-                            </div>
-                            <div class="bg-white/10 p-4 border border-white/20">
-                                <h4 class="font-black mb-2 uppercase text-xs">Flex Knowledge</h4>
-                                <p class="text-sm text-gray-300">Tell your teacher that fire is a <span class="italic text-white">Plasma-like state of matter</span>. They'll think you're a genius.</p>
-                            </div>
+    <div class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Sidebar: Squad & Leaderboard (Hidden on small mobile) -->
+        <aside class="lg:col-span-3 space-y-6">
+            <div class="card-glass p-5">
+                <h3 class="heading-font text-sm mb-4 flex items-center gap-2">
+                    <i class="fas fa-users"></i> Study Squad
+                </h3>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" class="w-8 h-8 rounded-full bg-gray-700">
+                            <span class="text-xs font-bold">Felix_Low</span>
                         </div>
+                        <span class="squad-online"></span>
                     </div>
-
-                    <div class="pt-6 border-t border-white/10 flex justify-between items-center">
-                        <div class="flex -space-x-2">
-                            <div class="w-8 h-8 rounded-full bg-red-500 border-2 border-black flex items-center justify-center text-[10px] font-bold">VIP</div>
-                            <div class="w-8 h-8 rounded-full bg-blue-500 border-2 border-black flex items-center justify-center text-[10px] font-bold">TOP</div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sam" class="w-8 h-8 rounded-full bg-gray-700">
+                            <span class="text-xs font-bold">Sam.K</span>
                         </div>
-                        <p class="text-[10px] text-gray-500 italic">34 other "Rebels" are looking at this topic right now.</p>
+                        <span class="squad-online"></span>
                     </div>
-                </div>
-
-                <!-- Reward Section -->
-                <div class="volt-bg text-black p-6 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div class="text-center md:text-left">
-                        <h4 class="font-black text-xl uppercase italic">Unlock the "Rich Kid" Badge?</h4>
-                        <p class="text-sm font-bold opacity-80">Finish the quiz to prove money isn't the only thing you have.</p>
-                    </div>
-                    <button class="bg-black text-white px-8 py-3 font-black text-sm uppercase tracking-tighter hover:bg-gray-800 transition-all">
-                        Start Challenge
+                    <button class="w-full mt-2 py-2 border border-dashed border-gray-600 text-[10px] uppercase font-bold hover:border-volt hover:text-volt transition-all">
+                        + Invite to Squad
                     </button>
                 </div>
             </div>
 
-        </div>
-    </section>
+            <div class="card-glass p-5">
+                <h3 class="heading-font text-sm mb-4 flex items-center gap-2 text-yellow-400">
+                    <i class="fas fa-crown"></i> Global Flexers
+                </h3>
+                <div class="space-y-3 text-xs">
+                    <div class="flex justify-between items-center bg-white/5 p-2 border-l-2 border-volt">
+                        <span class="font-bold">1. Jun Yang</span>
+                        <span class="volt-text font-black">1,240</span>
+                    </div>
+                    <div class="flex justify-between items-center p-2 opacity-60">
+                        <span>2. Felix_Low</span>
+                        <span>1,190</span>
+                    </div>
+                    <div class="flex justify-between items-center p-2 opacity-60">
+                        <span>3. AhBoy99</span>
+                        <span>940</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
 
-    <!-- Footer for "Late to School" stats -->
-    <footer class="w-full max-w-6xl mt-20 border-t border-white/10 py-8 flex flex-col md:flex-row justify-between items-center text-gray-500 text-[10px] uppercase tracking-widest gap-4">
-        <div class="flex gap-8">
-            <span>Class Attendance: <span class="text-red-500">12%</span></span>
-            <span>Sleep Level: <span class="volt-text">Maximum</span></span>
-        </div>
-        <div>
-            &copy; 2024 THE FLEX | Just Do It (The Homework)
-        </div>
-    </footer>
+        <!-- Main Content Area -->
+        <main class="lg:col-span-9 flex flex-col items-center">
+            <h1 class="heading-font text-4xl md:text-7xl mb-2 text-center">
+                Ask <span class="italic">Anything.</span>
+            </h1>
+            
+            <!-- Answer Modes Toggle -->
+            <div class="flex flex-wrap justify-center gap-2 mb-8">
+                <button onclick="setMode('translate')" class="mode-btn active px-4 py-2 text-[10px] font-black uppercase tracking-widest border border-white/20">Smart Translate</button>
+                <button onclick="setMode('homework')" class="mode-btn px-4 py-2 text-[10px] font-black uppercase tracking-widest border border-white/20">Homework Mode</button>
+                <button onclick="setMode('exam')" class="mode-btn px-4 py-2 text-[10px] font-black uppercase tracking-widest border border-white/20">Exam Prep</button>
+                <button onclick="setMode('video')" class="mode-btn px-4 py-2 text-[10px] font-black uppercase tracking-widest border border-white/20">Video Summaries</button>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="w-full max-w-3xl relative group">
+                <div class="search-container flex items-center px-6 py-4 rounded-none relative z-10">
+                    <input 
+                        id="searchInput"
+                        type="text" 
+                        placeholder="e.g. Why atoms small gila?" 
+                        class="bg-transparent w-full text-xl md:text-2xl outline-none font-bold text-black placeholder-gray-400"
+                    >
+                    <button onclick="simulateSearch()" class="volt-bg text-black px-6 py-3 font-black hover:bg-black hover:text-white transition-colors">
+                        GO
+                    </button>
+                </div>
+                <div class="absolute inset-0 translate-x-2 translate-y-2 bg-white -z-10 group-hover:translate-x-3 group-hover:translate-y-3 transition-transform"></div>
+            </div>
+
+            <!-- Results Section -->
+            <section id="resultsSection" class="w-full mt-16 hidden">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    
+                    <!-- Left: Translation/Glow-up -->
+                    <div class="col-span-1 space-y-6">
+                        <div class="card-glass p-6 border-l-4 border-volt relative overflow-hidden">
+                            <span class="absolute top-2 right-2 text-[8px] bg-volt text-black px-1 font-bold">SYNCED TO SQUAD</span>
+                            <p class="text-[10px] text-gray-500 uppercase mb-2">Original Input:</p>
+                            <p id="userOriginalQuery" class="italic mb-4 text-sm">"..."</p>
+                            <i class="fas fa-bolt volt-text mb-4 block"></i>
+                            <p class="text-[10px] text-gray-500 uppercase mb-2">Scientific Upgrade:</p>
+                            <p id="scientificTerm" class="font-bold text-lg text-white">---</p>
+                        </div>
+
+                        <div class="reward-badge bg-gradient-to-r from-yellow-600 to-orange-600 p-4 rounded-lg flex items-center justify-between cursor-pointer" onclick="claimXP()">
+                            <div>
+                                <p class="text-[10px] uppercase font-bold text-white/80">Squad Mission</p>
+                                <p id="missionText" class="text-sm font-black">All 3 squad members read this to get 200 XP</p>
+                            </div>
+                            <i class="fas fa-users text-2xl text-white"></i>
+                        </div>
+                    </div>
+
+                    <!-- Right: The Content -->
+                    <div class="col-span-1 md:col-span-2 space-y-6">
+                        <div class="card-glass p-8 space-y-6 relative border-t-2 border-volt">
+                            <div class="flex justify-between items-start">
+                                <h3 id="breakdownTitle" class="heading-font text-2xl">The Breakdown</h3>
+                                <div id="modeIndicator" class="volt-bg text-black text-[9px] font-black px-2 py-1 uppercase italic">Smart Translate Mode</div>
+                            </div>
+                            
+                            <div id="mainContent" class="prose prose-invert max-w-none">
+                                <!-- Dynamic Content -->
+                            </div>
+
+                            <div class="flex justify-end pt-4">
+                                <button onclick="toggleStealth()" class="text-[10px] font-black uppercase text-gray-500 hover:text-white transition-all">
+                                    <i class="fas fa-eye-slash mr-2"></i> Toggle Stealth View
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Quick Rebel Actions -->
+    <div class="fixed bottom-6 flex gap-4">
+        <button class="card-glass px-6 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+            <i class="fas fa-fire mr-2"></i> Hotpot Break
+        </button>
+        <button class="volt-bg text-black px-6 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-white transition-all shadow-xl">
+            <i class="fas fa-trophy mr-2"></i> Reward Shop
+        </button>
+    </div>
 
     <script>
+        let currentPoints = 1240;
+        let currentMode = 'translate';
+
+        const contentDB = {
+            "fire": {
+                term: "Exothermic Combustion",
+                content: `<p class="text-lg">Fire happens when oxygen and fuel decide to break up their old bonds and form new ones. It releases massive energy. <b>Homework Tip:</b> Always mention the 'Fire Triangle' (Oxygen, Heat, Fuel) to score.</p>`,
+                mission: "Quiz your squad on the Fire Triangle for 100 XP"
+            },
+            "atom": {
+                term: "Subatomic Particle Structures",
+                content: `<p class="text-lg">Atoms are the Lego bricks of the universe. They are 99% empty space. You are basically made of nothing, but organized. <b>Exam Tip:</b> Memorize the charge of Electrons (Negative) for Paper 1.</p>`,
+                mission: "Finish Atom Video Summary for 150 XP"
+            },
+            "default": {
+                term: "Inquiry Logic Processing",
+                content: `<p class="text-lg">We're scanning the global labs for this. Every time you ask, you level up. Real rebels know more than the teacher.</p>`,
+                mission: "Keep searching to unlock Level 16"
+            }
+        };
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.innerText.toLowerCase().includes(mode.substring(0,3))) {
+                    btn.classList.add('active');
+                }
+            });
+            document.getElementById('modeIndicator').innerText = mode + " Mode";
+            if(document.getElementById('searchInput').value) simulateSearch();
+        }
+
         function simulateSearch() {
-            const query = document.getElementById('searchInput').value;
+            const query = document.getElementById('searchInput').value.toLowerCase();
             if (!query) return;
 
-            // Update result content based on search
-            document.getElementById('userOriginalQuery').innerText = `"${query}"`;
-            
-            // Show results with a "loading" flex feel
-            const results = document.getElementById('resultsSection');
-            results.classList.remove('hidden');
-            results.scrollIntoView({ behavior: 'smooth' });
-
-            // Visual feedback
             const btn = document.querySelector('button[onclick="simulateSearch()"]');
-            btn.innerText = "UPDATING...";
+            btn.innerText = "FLEXING...";
+            
             setTimeout(() => {
+                document.getElementById('userOriginalQuery').innerText = `"${query}"`;
+                let data = contentDB.default;
+                if (query.includes('fire') || query.includes('hot')) data = contentDB.fire;
+                if (query.includes('atom') || query.includes('small')) data = contentDB.atom;
+
+                // Adjust output based on mode
+                let finalContent = data.content;
+                if(currentMode === 'exam') finalContent += `<div class="mt-4 p-4 bg-red-900/20 border border-red-500 text-xs font-bold uppercase">Exam Alert: This comes up in 85% of SPM trials.</div>`;
+                if(currentMode === 'video') finalContent = `<div class="aspect-video bg-white/10 flex items-center justify-center mb-4"><i class="fas fa-play text-4xl volt-text"></i></div>` + finalContent;
+
+                document.getElementById('scientificTerm').innerText = data.term;
+                document.getElementById('mainContent').innerHTML = finalContent;
+                document.getElementById('missionText').innerText = data.mission;
+
+                document.getElementById('resultsSection').classList.remove('hidden');
+                document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
                 btn.innerText = "GO";
-            }, 1000);
+            }, 800);
+        }
+
+        function claimXP() {
+            currentPoints += 200;
+            document.getElementById('pointsDisplay').innerHTML = `${currentPoints.toLocaleString()} <i class="fas fa-bolt ml-1"></i>`;
+            const badge = document.querySelector('.reward-badge');
+            badge.style.opacity = "0.4";
+            badge.style.pointerEvents = "none";
+            badge.querySelector('p:last-child').innerText = "Squad Mission Complete!";
+            document.querySelector('.level-progress').style.width = "85%";
         }
 
         function toggleStealth() {
             document.body.classList.toggle('stealth-mode');
-            const btn = document.querySelector('button[onclick="toggleStealth()"]');
-            if(document.body.classList.contains('stealth-mode')) {
-                btn.innerHTML = '<i class="fas fa-eye"></i> Exit Stealth';
-            } else {
-                btn.innerHTML = '<i class="fas fa-eye-slash"></i> Stealth Mode (Under Desk)';
-            }
         }
 
-        // Allow 'Enter' key to search
-        document.getElementById('searchInput').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                simulateSearch();
-            }
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') simulateSearch();
         });
     </script>
 </body>
