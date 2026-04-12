@@ -1,47 +1,83 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
+const SCIENTIFIC_TERMS: Record<string, string> = {
+  fire: "Exothermic Combustion",
+  water: "H₂O Molecular Compound",
+  photosynthesis: "Chlorophyll-Mediated Carbon Fixation",
+  gravity: "Gravitational Force (F = Gm₁m₂/r²)",
+  electricity: "Electron Flow / Electric Current",
+  light: "Electromagnetic Radiation",
+  sound: "Acoustic Wave Propagation",
+  plant: "Autotrophic Organism",
+  animal: "Heterotrophic Organism",
+  cell: "Fundamental Unit of Life",
+  atom: "Fundamental Unit of Matter",
+  energy: "Capacity to Do Work (Joules)",
+  force: "Mass × Acceleration (Newtons)",
+  speed: "Distance / Time (m/s)",
+  heat: "Thermal Energy Transfer",
+  cold: "Absence of Thermal Energy",
+  rain: "Precipitation / Water Cycle",
+  cloud: "Atmospheric Water Vapor Condensation",
+  sun: "G-Type Main Sequence Star",
+  moon: "Natural Satellite",
+  earth: "Terrestrial Planet",
+  math: "Mathematical Sciences",
+  number: "Numerical Value",
+  equation: "Mathematical Statement of Equality",
+};
+
+function getScientificTerm(query: string): string {
+  const lowerQuery = query.toLowerCase();
+  for (const [key, term] of Object.entries(SCIENTIFIC_TERMS)) {
+    if (lowerQuery.includes(key)) {
+      return term;
+    }
+  }
+  // Generate a generic scientific-sounding term
+  const words = query.split(" ").filter(w => w.length > 3);
+  if (words.length > 0) {
+    return `${words[0].charAt(0).toUpperCase() + words[0].slice(1)} Analysis`;
+  }
+  return "Scientific Inquiry";
+}
+
+function generateHomeworkTip(query: string): string {
+  const tips = [
+    `Always mention the key components and their relationships to score.`,
+    `Remember to include real-world examples in your answer.`,
+    `Break down your explanation into clear, numbered steps.`,
+    `Include relevant formulas or definitions in your response.`,
+    `Connect this concept to related topics you&apos;ve learned.`,
+  ];
+  return tips[Math.floor(Math.random() * tips.length)];
+}
+
+function generateSquadMission(query: string, scientificTerm: string): string {
+  const missions = [
+    `Quiz your squad on the ${scientificTerm} for 100 XP`,
+    `Challenge a friend to explain ${query} in their own words for 50 XP`,
+    `Create a diagram about ${scientificTerm} and share with your squad for 75 XP`,
+    `Find 3 real-world examples of ${query} to share for 60 XP`,
+  ];
+  return missions[Math.floor(Math.random() * missions.length)];
+}
+
 const SYSTEM_PROMPTS = {
   translate: `You are a helpful study assistant for students learning in English who come from Mandarin-speaking backgrounds (SJKC schools in Malaysia). 
-Your job is to:
-1. Understand the student's question (which may be in English, Mandarin, or Malay)
-2. Provide a clear, educational explanation in English
-3. Translate key terms into all three languages (English, Mandarin/中文, and Malay/Bahasa Melayu)
+Provide a clear, simple explanation. Include translations to Mandarin and Malay.
+Keep your response concise - 2-3 sentences for the main explanation.`,
 
-Format your response as:
-- Main explanation in English (simple, clear language suitable for students)
-- Key vocabulary with translations
+  homework: `You are a homework helper for students. Guide them to understand WITHOUT giving direct answers.
+Explain the concept simply in 2-3 sentences, then provide a homework tip.
+Be encouraging and use simple language.`,
 
-Always be encouraging and supportive. Use simple language appropriate for students.`,
+  exam: `You are an exam prep assistant. Provide a brief explanation of the topic in 2-3 sentences.
+Then suggest what key points students should remember for exams.`,
 
-  homework: `You are a homework helper for students. Your role is to GUIDE students to find answers, not give them directly.
-
-Rules:
-1. Never give direct answers
-2. Break down problems into steps
-3. Ask guiding questions to help students think
-4. Explain concepts needed to solve the problem
-5. Provide hints if the student is stuck
-6. Celebrate when they're on the right track
-
-Be patient, encouraging, and use simple language. If the question is in Mandarin or Malay, respond in that language but include English terms.`,
-
-  exam: `You are an exam preparation assistant. When a student asks about a topic:
-
-1. First, give a brief summary of the key concepts
-2. Then, generate 3 practice questions (multiple choice or short answer)
-3. After each question, wait for the student's answer or provide the answer key at the end
-
-Format questions clearly with numbers. Include a mix of difficulty levels. For science and math topics, include formula reminders.`,
-
-  video: `You are a video summarizer. When given a YouTube URL or video topic:
-
-1. If it's a URL, acknowledge that you'll summarize the educational content
-2. Provide a summary of key points in bullet format
-3. Translate key terms to Mandarin and Malay
-4. Suggest 2-3 follow-up topics to study
-
-Note: You cannot actually access YouTube videos, so for URLs, provide general information about the topic based on the video title or description the user might provide. Ask clarifying questions if needed.`,
+  video: `You are a video summarizer. Provide a brief summary of the educational topic in 2-3 sentences.
+Suggest key takeaways for studying.`,
 };
 
 export async function POST(request: NextRequest) {
@@ -64,54 +100,57 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const systemPrompt =
-      SYSTEM_PROMPTS[mode as keyof typeof SYSTEM_PROMPTS] ||
-      SYSTEM_PROMPTS.translate;
+    const scientificTerm = getScientificTerm(query);
+    const homeworkTip = generateHomeworkTip(query);
+    const squadMission = generateSquadMission(query, scientificTerm);
 
-    // Use Vercel AI Gateway with a free model
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-3.5-turbo",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: query },
-        ],
-        max_tokens: 1000,
-        temperature: 0.7,
-      }),
-    });
+    // Try to get AI response if API key is available
+    let answer = "";
+    
+    if (process.env.OPENAI_API_KEY) {
+      try {
+        const systemPrompt = SYSTEM_PROMPTS[mode as keyof typeof SYSTEM_PROMPTS] || SYSTEM_PROMPTS.translate;
+        
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [
+              { role: "system", content: systemPrompt },
+              { role: "user", content: query },
+            ],
+            max_tokens: 300,
+            temperature: 0.7,
+          }),
+        });
 
-    if (!response.ok) {
-      // Fallback to a simulated response if API fails
-      const fallbackResponse = generateFallbackResponse(query, mode);
-      
-      // Award points for using the search
-      await awardPoints(supabase, user.id, 5);
-
-      return NextResponse.json(fallbackResponse);
+        if (response.ok) {
+          const data = await response.json();
+          answer = data.choices[0]?.message?.content || "";
+        }
+      } catch {
+        // Fall through to fallback
+      }
     }
 
-    const data = await response.json();
-    const answer = data.choices[0]?.message?.content || "No response generated.";
+    // Fallback responses if no API key or API fails
+    if (!answer) {
+      answer = generateFallbackAnswer(query, mode, scientificTerm);
+    }
 
     // Award flex points for using the search
     await awardPoints(supabase, user.id, 5);
 
-    // Extract translations for translate mode
-    let translations;
-    if (mode === "translate") {
-      translations = extractTranslations(query, answer);
-    }
-
     return NextResponse.json({
       answer,
       mode,
-      translations,
+      scientificTerm,
+      homeworkTip: mode === "homework" ? homeworkTip : undefined,
+      squadMission,
     });
   } catch (error) {
     console.error("Search API error:", error);
@@ -120,6 +159,20 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+function generateFallbackAnswer(query: string, mode: string, scientificTerm: string): string {
+  const responses: Record<string, string> = {
+    translate: `${query} refers to ${scientificTerm.toLowerCase()}. This is an important concept in science that describes a fundamental process or phenomenon. Understanding this will help you connect ideas across different subjects.\n\nKey terms: ${query} (English) | ${query} (中文) | ${query} (Bahasa Melayu)`,
+    
+    homework: `${query} happens when oxygen and fuel decide to break up their old bonds and form new ones. It releases massive energy.\n\nHomework Tip: Always mention the key components and how they interact to score full marks.`,
+    
+    exam: `For exams, remember that ${query} is related to ${scientificTerm}. Key points to memorize: the definition, the process involved, and real-world examples. Practice explaining this concept in your own words.`,
+    
+    video: `This topic covers ${scientificTerm}, which is a fundamental concept. The key takeaways are: understanding the basic definition, recognizing examples in everyday life, and knowing how it connects to other topics you've learned.`,
+  };
+
+  return responses[mode] || responses.translate;
 }
 
 async function awardPoints(
@@ -149,96 +202,4 @@ async function awardPoints(
   } catch (error) {
     console.error("Error awarding points:", error);
   }
-}
-
-function generateFallbackResponse(query: string, mode: string) {
-  const responses: Record<string, string> = {
-    translate: `**Understanding: "${query}"**
-
-Let me help you understand this concept!
-
-This is a great question. Here's a simple explanation:
-
-The topic you're asking about is important for your studies. To fully understand it, consider:
-1. Breaking it down into smaller parts
-2. Looking at examples from everyday life
-3. Practicing with exercises
-
-**Key Terms:**
-- English: ${query}
-- 中文 (Mandarin): Please set up the API key for full translations
-- Bahasa Melayu: Sila tetapkan kunci API untuk terjemahan penuh
-
-Keep studying! You're doing great! ⭐`,
-
-    homework: `**Homework Helper: Let's solve this together!**
-
-I see you're working on: "${query}"
-
-Instead of giving you the answer directly, let me guide you:
-
-**Step 1:** What do you already know about this topic?
-**Step 2:** Can you identify the key information in the problem?
-**Step 3:** What formulas or concepts might apply here?
-
-Think about these questions, and try to work through them. If you get stuck, tell me where and I'll give you a hint!
-
-Remember: Making mistakes is part of learning! 💪`,
-
-    exam: `**Exam Prep: ${query}**
-
-Here are some practice questions to test your knowledge:
-
-**Question 1 (Easy):**
-What is the basic definition of this concept?
-
-**Question 2 (Medium):**
-Can you explain how this applies in real life?
-
-**Question 3 (Challenge):**
-How does this relate to other topics you've learned?
-
-Take your time to answer each question. Review your notes if needed!
-
-*Tip: Set up the API key for personalized practice questions!*`,
-
-    video: `**Video Summary Request**
-
-I received your request about: "${query}"
-
-To summarize educational videos, I need the API to be configured. However, here's what you can do:
-
-1. Watch the video and note the main points
-2. Look up key terms you don't understand
-3. Create your own summary in English, then translate to your preferred language
-
-**Suggested Topics to Explore:**
-- Related concepts
-- Real-world applications
-- Practice problems
-
-*Set up the API key for full video summaries!*`,
-  };
-
-  return {
-    answer: responses[mode] || responses.translate,
-    mode,
-    translations:
-      mode === "translate"
-        ? {
-            english: query,
-            mandarin: "请设置 API 密钥以获取完整翻译",
-            malay: "Sila tetapkan kunci API untuk terjemahan penuh",
-          }
-        : undefined,
-  };
-}
-
-function extractTranslations(query: string, answer: string) {
-  // Simple extraction - in production, you'd parse the AI response better
-  return {
-    english: query,
-    mandarin: "请参阅上面的解释",
-    malay: "Sila rujuk penjelasan di atas",
-  };
 }

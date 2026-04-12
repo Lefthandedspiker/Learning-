@@ -33,42 +33,27 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/30 to-background px-4">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 mb-4">
-            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
-              <svg
-                className="w-6 h-6 text-primary-foreground"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                />
-              </svg>
+          <Link href="/" className="inline-block mb-4">
+            <div className="bg-primary text-primary-foreground px-4 py-2 font-bold text-lg tracking-wider">
+              THE FLEX
             </div>
-            <h1 className="text-2xl font-heading font-bold text-foreground">
-              StudyBuddy
-            </h1>
-          </div>
+          </Link>
           <p className="text-muted-foreground">
-            Welcome back! Sign in to continue learning.
+            Welcome back! Sign in to continue flexing.
           </p>
         </div>
 
-        <div className="bg-card rounded-2xl shadow-lg border border-border p-8">
+        <div className="bg-card rounded-lg border border-border p-8">
           <form onSubmit={handleLogin} className="space-y-5">
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-foreground mb-2"
+                className="block text-xs font-bold text-foreground mb-2 tracking-wider"
               >
-                Email
+                EMAIL
               </label>
               <input
                 id="email"
@@ -76,7 +61,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+                className="w-full px-4 py-3 rounded border border-border bg-input text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-all"
                 placeholder="your@email.com"
               />
             </div>
@@ -84,9 +69,9 @@ export default function LoginPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-foreground mb-2"
+                className="block text-xs font-bold text-foreground mb-2 tracking-wider"
               >
-                Password
+                PASSWORD
               </label>
               <input
                 id="password"
@@ -94,13 +79,13 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+                className="w-full px-4 py-3 rounded border border-border bg-input text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-all"
                 placeholder="Enter your password"
               />
             </div>
 
             {error && (
-              <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+              <div className="p-3 rounded bg-destructive/10 text-destructive text-sm">
                 {error}
               </div>
             )}
@@ -108,9 +93,9 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-primary text-primary-foreground font-semibold rounded-xl hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="w-full py-3 px-4 bg-primary text-primary-foreground font-bold tracking-wider hover:opacity-90 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
-              {loading ? "Signing in..." : "Sign In"}
+              {loading ? "SIGNING IN..." : "SIGN IN"}
             </button>
           </form>
 
@@ -119,7 +104,7 @@ export default function LoginPage() {
               {"Don't have an account? "}
               <Link
                 href="/auth/sign-up"
-                className="text-primary font-medium hover:underline"
+                className="text-primary font-bold hover:underline"
               >
                 Sign up
               </Link>

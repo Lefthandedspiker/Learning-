@@ -13,13 +13,13 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "StudyBuddy - Smart Learning for Every Student",
+  title: "THE FLEX - Smart Learning for Every Student",
   description:
     "Bridge the language gap with AI-powered study tools. Smart translate, homework help, exam prep, and more for students transitioning to English education.",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f97316",
+  themeColor: "#BFFF00",
   width: "device-width",
   initialScale: 1,
 };
@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${spaceGrotesk.variable} font-sans antialiased`}
+        className={`${inter.variable} ${spaceGrotesk.variable} font-sans antialiased bg-background`}
       >
         {children}
       </body>

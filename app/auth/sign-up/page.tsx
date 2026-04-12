@@ -69,42 +69,27 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/30 to-background px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 mb-4">
-            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
-              <svg
-                className="w-6 h-6 text-primary-foreground"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                />
-              </svg>
+          <Link href="/" className="inline-block mb-4">
+            <div className="bg-primary text-primary-foreground px-4 py-2 font-bold text-lg tracking-wider">
+              THE FLEX
             </div>
-            <h1 className="text-2xl font-heading font-bold text-foreground">
-              StudyBuddy
-            </h1>
-          </div>
+          </Link>
           <p className="text-muted-foreground">
-            Create your account and start learning smarter!
+            Create your account and start flexing!
           </p>
         </div>
 
-        <div className="bg-card rounded-2xl shadow-lg border border-border p-8">
+        <div className="bg-card rounded-lg border border-border p-8">
           <form onSubmit={handleSignUp} className="space-y-4">
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-foreground mb-2"
+                className="block text-xs font-bold text-foreground mb-2 tracking-wider"
               >
-                Email <span className="text-destructive">*</span>
+                EMAIL <span className="text-destructive">*</span>
               </label>
               <input
                 id="email"
@@ -113,7 +98,7 @@ export default function SignUpPage() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+                className="w-full px-4 py-3 rounded border border-border bg-input text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-all"
                 placeholder="your@email.com"
               />
             </div>
@@ -121,9 +106,9 @@ export default function SignUpPage() {
             <div>
               <label
                 htmlFor="username"
-                className="block text-sm font-medium text-foreground mb-2"
+                className="block text-xs font-bold text-foreground mb-2 tracking-wider"
               >
-                Username <span className="text-destructive">*</span>
+                USERNAME <span className="text-destructive">*</span>
               </label>
               <input
                 id="username"
@@ -132,7 +117,7 @@ export default function SignUpPage() {
                 value={formData.username}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+                className="w-full px-4 py-3 rounded border border-border bg-input text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-all"
                 placeholder="Choose a username"
               />
             </div>
@@ -141,9 +126,9 @@ export default function SignUpPage() {
               <div>
                 <label
                   htmlFor="age"
-                  className="block text-sm font-medium text-foreground mb-2"
+                  className="block text-xs font-bold text-foreground mb-2 tracking-wider"
                 >
-                  Age
+                  AGE
                 </label>
                 <input
                   id="age"
@@ -153,7 +138,7 @@ export default function SignUpPage() {
                   max="100"
                   value={formData.age}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+                  className="w-full px-4 py-3 rounded border border-border bg-input text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-all"
                   placeholder="Your age"
                 />
               </div>
@@ -161,9 +146,9 @@ export default function SignUpPage() {
               <div>
                 <label
                   htmlFor="birthday"
-                  className="block text-sm font-medium text-foreground mb-2"
+                  className="block text-xs font-bold text-foreground mb-2 tracking-wider"
                 >
-                  Birthday
+                  BIRTHDAY
                 </label>
                 <input
                   id="birthday"
@@ -171,7 +156,7 @@ export default function SignUpPage() {
                   type="date"
                   value={formData.birthday}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+                  className="w-full px-4 py-3 rounded border border-border bg-input text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-all"
                 />
               </div>
             </div>
@@ -179,9 +164,9 @@ export default function SignUpPage() {
             <div>
               <label
                 htmlFor="location"
-                className="block text-sm font-medium text-foreground mb-2"
+                className="block text-xs font-bold text-foreground mb-2 tracking-wider"
               >
-                Location
+                LOCATION
               </label>
               <input
                 id="location"
@@ -189,7 +174,7 @@ export default function SignUpPage() {
                 type="text"
                 value={formData.location}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+                className="w-full px-4 py-3 rounded border border-border bg-input text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-all"
                 placeholder="e.g. Kuala Lumpur, Malaysia"
               />
             </div>
@@ -197,9 +182,9 @@ export default function SignUpPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-foreground mb-2"
+                className="block text-xs font-bold text-foreground mb-2 tracking-wider"
               >
-                Password <span className="text-destructive">*</span>
+                PASSWORD <span className="text-destructive">*</span>
               </label>
               <input
                 id="password"
@@ -208,7 +193,7 @@ export default function SignUpPage() {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+                className="w-full px-4 py-3 rounded border border-border bg-input text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-all"
                 placeholder="At least 6 characters"
               />
             </div>
@@ -216,9 +201,9 @@ export default function SignUpPage() {
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-medium text-foreground mb-2"
+                className="block text-xs font-bold text-foreground mb-2 tracking-wider"
               >
-                Confirm Password <span className="text-destructive">*</span>
+                CONFIRM PASSWORD <span className="text-destructive">*</span>
               </label>
               <input
                 id="confirmPassword"
@@ -227,13 +212,13 @@ export default function SignUpPage() {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+                className="w-full px-4 py-3 rounded border border-border bg-input text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-all"
                 placeholder="Confirm your password"
               />
             </div>
 
             {error && (
-              <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+              <div className="p-3 rounded bg-destructive/10 text-destructive text-sm">
                 {error}
               </div>
             )}
@@ -241,9 +226,9 @@ export default function SignUpPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-primary text-primary-foreground font-semibold rounded-xl hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="w-full py-3 px-4 bg-primary text-primary-foreground font-bold tracking-wider hover:opacity-90 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
-              {loading ? "Creating account..." : "Create Account"}
+              {loading ? "CREATING ACCOUNT..." : "CREATE ACCOUNT"}
             </button>
           </form>
 
@@ -252,7 +237,7 @@ export default function SignUpPage() {
               Already have an account?{" "}
               <Link
                 href="/auth/login"
-                className="text-primary font-medium hover:underline"
+                className="text-primary font-bold hover:underline"
               >
                 Sign in
               </Link>

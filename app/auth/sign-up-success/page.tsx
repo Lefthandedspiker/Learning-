@@ -2,12 +2,12 @@ import Link from "next/link";
 
 export default function SignUpSuccessPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/30 to-background px-4">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-md text-center">
-        <div className="bg-card rounded-2xl shadow-lg border border-border p-8">
-          <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
+        <div className="bg-card rounded-lg border border-border p-8">
+          <div className="w-16 h-16 bg-primary/10 rounded flex items-center justify-center mx-auto mb-6">
             <svg
-              className="w-8 h-8 text-accent"
+              className="w-8 h-8 text-primary"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -21,20 +21,20 @@ export default function SignUpSuccessPage() {
             </svg>
           </div>
 
-          <h1 className="text-2xl font-heading font-bold text-foreground mb-3">
+          <h1 className="text-2xl font-bold text-foreground mb-3">
             Check Your Email
           </h1>
 
           <p className="text-muted-foreground mb-6">
-            {"We've sent you a confirmation email. Please click the link in the email to verify your account and start learning!"}
+            {"We've sent you a confirmation email. Please click the link in the email to verify your account and start flexing!"}
           </p>
 
           <div className="space-y-3">
             <Link
               href="/auth/login"
-              className="block w-full py-3 px-4 bg-primary text-primary-foreground font-semibold rounded-xl hover:opacity-90 transition-all text-center"
+              className="block w-full py-3 px-4 bg-primary text-primary-foreground font-bold tracking-wider hover:opacity-90 transition-all text-center"
             >
-              Go to Login
+              GO TO LOGIN
             </Link>
 
             <p className="text-sm text-muted-foreground">
